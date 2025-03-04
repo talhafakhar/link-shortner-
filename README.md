@@ -39,7 +39,7 @@ Ensure you have the following installed before starting:
 
 1️⃣ Clone the repository:
 ```bash
- git clone https://github.com/yourusername/url-shortener.git
+ git clone https://github.com/talhafakhar/link-shortner-.git
  cd url-shortener
 ```
 
