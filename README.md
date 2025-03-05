@@ -29,7 +29,7 @@ Ensure you have the following installed before starting:
 
 - ✅ **PHP 8.2+**
 - ✅ **Composer**
-- ✅ **Laravel 10.x**
+- ✅ **Laravel 12.x**
 - ✅ **MySQL or PostgreSQL** (for database storage)
 - ✅ **Node.js & npm** (for frontend assets)
 
@@ -40,7 +40,7 @@ Ensure you have the following installed before starting:
 1️⃣ Clone the repository:
 ```bash
  git clone https://github.com/talhafakhar/link-shortner-.git
- cd url-shortener
+ cd link-shortner
 ```
 
 2️⃣ Install PHP dependencies:
