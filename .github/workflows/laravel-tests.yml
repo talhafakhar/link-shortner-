@@ -59,8 +59,15 @@ jobs:
         php artisan key:generate
         php artisan config:clear
 
-    # Configure Database
-    - name: Configure Database
+   # 7. Database preparation
+    - name: Prepare Database
+      env:
+        DB_CONNECTION: mysql
+        DB_HOST: 127.0.0.1
+        DB_PORT: 3306
+        DB_DATABASE: shorturl
+        DB_USERNAME: root
+        DB_PASSWORD: 
       run: |
         php artisan migrate:fresh
         php artisan db:seed
