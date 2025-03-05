@@ -1,0 +1,108 @@
+name: Laravel URL Shortener CI/CD
+
+on:
+  push:
+    branches: 
+      - master
+  pull_request:
+    branches: 
+      - master
+
+jobs:
+  laravel-tests:
+    runs-on: ubuntu-latest
+
+    # Service container to run tests
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+          MYSQL_DATABASE: shorturl
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+    - uses: actions/checkout@v3
+
+    # Setup PHP with specific version
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.2'
+        extensions: mbstring, pdo, mysql
+        coverage: xdebug
+
+    # Validate composer.json and composer.lock
+    # - name: Validate composer.json and composer.lock
+    #   run: composer validate --strict
+
+    # Cache Composer dependencies
+    # - name: Cache Composer dependencies
+    #   uses: actions/cache@v3
+    #   with:
+    #     path: /tmp/composer-cache
+        # key: ${{ runner.os }}-${{ hashFiles('**/composer.lock') }}
+
+    # Install Dependencies
+    - name: Install Dependencies
+      run: |
+        composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+        npm install
+        npm run build
+
+    # Prepare Laravel Application
+    - name: Prepare Laravel Application
+      run: |
+        cp .env.example .env
+        php artisan key:generate
+        php artisan config:clear
+
+    # Configure Database
+    - name: Configure Database
+      run: |
+        php artisan migrate:fresh
+        php artisan db:seed
+
+    # Run PHPUnit Tests
+    - name: Execute PHPUnit Tests
+      env:
+        DB_CONNECTION: mysql
+        DB_HOST: 127.0.0.1
+        DB_PORT: 3306
+        DB_DATABASE: shorturl
+        DB_USERNAME: root
+        DB_PASSWORD:
+      run: vendor/bin/phpunit --testdox --stop-on-failure
+
+    # Run PHP CodeSniffer for Code Quality
+    - name: PHP Code Style Check
+      run: vendor/bin/phpcs app tests --standard=PSR2
+
+    # Static Analysis with PHPStan
+    - name: PHPStan Static Analysis
+      run: vendor/bin/phpstan analyse app tests --level=6
+
+    # - name: 🚀 Deploy to Server
+    #   if: success()
+    #   run: |
+    #     ssh user@server "cd /path-to-project && git pull origin main && php artisan migrate --force && php artisan config:clear && php artisan cache:clear"
+
+  # Performance Test Job
+  # performance-tests:
+  #   needs: laravel-tests
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - uses: actions/checkout@v3
+    
+  #   - name: Performance Testing Setup
+  #     run: |
+  #       sudo apt-get update
+  #       sudo apt-get install -y apache2-utils
+    
+  #   - name: Run Apache Benchmark
+  #     run: |
+  #       ab -n 1000 -c 10 http://localhost:8000/ || true
+
+ 
