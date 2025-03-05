@@ -29,7 +29,7 @@ class UrlControllerTest extends TestCase
             ]
         );
     }
-    public function test_home_page_loads(): void
+    public function testHomePageLoads(): void
     {
         $response = $this->get('/');
 
@@ -37,7 +37,7 @@ class UrlControllerTest extends TestCase
         $response->assertViewIs('home');
     }
 
-    public function test_it_creates_short_url(): void
+    public function testItCreatesShortUrl(): void
     {
         $response = $this->postJson(
             'api/shorten',
@@ -67,7 +67,7 @@ class UrlControllerTest extends TestCase
         );
     }
 
-    public function test_it_creates_short_url_with_custom_slug(): void
+    public function testItCreatesShortUrlWithCustomSlug(): void
     {
         $response = $this->postJson(
             '/api/shorten',
@@ -97,7 +97,7 @@ class UrlControllerTest extends TestCase
         );
     }
 
-    public function test_it_rejects_duplicate_slug(): void
+    public function testItRejectsDuplicateSlug(): void
     {
         ShortUrl::factory()->create(
             [
@@ -116,7 +116,7 @@ class UrlControllerTest extends TestCase
         $response->assertStatus(422);
     }
 
-    public function test_it_redirects_to_original_url(): void
+    public function testItRedirectsToOriginalUrl(): void
     {
         $shortUrl = ShortUrl::factory()->create(
             [
@@ -130,7 +130,7 @@ class UrlControllerTest extends TestCase
         $response->assertRedirect($shortUrl->original_url);
     }
 
-    public function test_it_returns_error_for_expired_url(): void
+    public function testItReturnsErrorForExpiredUrl(): void
     {
         $shortUrl = ShortUrl::factory()->create(
             [
@@ -146,7 +146,7 @@ class UrlControllerTest extends TestCase
         $response->assertSessionHas('error', 'URL has expired');
     }
 
-    public function test_it_shows_analytics_page(): void
+    public function testItShowsAnalyticsPage(): void
     {
         $shortUrl = ShortUrl::factory()->create(
             [
