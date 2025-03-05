@@ -12,10 +12,12 @@ class AnalyticsService
     {
         $shortUrl->incrementVisits();
         
-        UrlVisit::create([
+        UrlVisit::create(
+            [
             'short_url_id' => $shortUrl->id,
             'ip_address' => $request->ip(),
-        ]);
+            ]
+        );
     }
 
     public function getUrlAnalytics(ShortUrl $shortUrl): array
@@ -28,12 +30,14 @@ class AnalyticsService
                 ->latest()
                 ->take(10)
                 ->get()
-                ->map(function ($visit) {
-                    return [
+                ->map(
+                    function ($visit) {
+                        return [
                         'ip_address' => $visit->ip_address,
                         'visited_at' => $visit->created_at,
-                    ];
-                }),
+                        ];
+                    }
+                ),
         ];
     }
 }

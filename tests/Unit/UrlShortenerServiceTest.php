@@ -57,10 +57,12 @@ class UrlShortenerServiceTest extends TestCase
 
     public function test_it_finds_url_by_slug(): void
     {
-        $shortUrl = ShortUrl::factory()->create([
+        $shortUrl = ShortUrl::factory()->create(
+            [
             'original_url' => 'https://example.com',
             'slug' => 'test-slug',
-        ]);
+            ]
+        );
 
         $foundUrl = $this->urlShortenerService->findBySlug('test-slug');
 

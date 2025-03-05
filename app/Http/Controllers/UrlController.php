@@ -43,7 +43,8 @@ class UrlController extends Controller
             $request->input('expires_at')
         );
 
-        return response()->json([
+        return response()->json(
+            [
             'success' => true,
             'data' => [
                 'original_url' => $shortUrl->original_url,
@@ -51,16 +52,19 @@ class UrlController extends Controller
                 'slug' => $shortUrl->slug,
                 'expires_at' => $shortUrl->expires_at ?? null,
             ]
-        ], 200);
+            ], 200
+        );
     }
 
 
 
     public function redirect(string $slug, Request $request): RedirectResponse
     {
-        $shortUrl = Cache::remember('short_url:' . $slug, 3600, function () use ($slug) {
-            return $this->urlShortenerService->findBySlug($slug);
-        });
+        $shortUrl = Cache::remember(
+            'short_url:' . $slug, 3600, function () use ($slug) {
+                return $this->urlShortenerService->findBySlug($slug);
+            }
+        );
 
         if (!$shortUrl) {
             // return redirect()->route('home')->with('error', 'URL not found');
@@ -87,10 +91,12 @@ class UrlController extends Controller
 
         $analytics = $this->analyticsService->getUrlAnalytics($shortUrl);
 
-        return view('analytics', [
+        return view(
+            'analytics', [
             'shortUrl' => $shortUrl,
             'analytics' => $analytics,
-        ]);
+            ]
+        );
     }
 
    

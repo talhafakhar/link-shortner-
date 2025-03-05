@@ -20,17 +20,19 @@ class RateLimitShortUrlCreation
     /**
      * Handle an incoming request.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response) $next
      */
     public function handle(Request $request, Closure $next): Response
     {
          $key = 'url-shortener:' . $request->ip();
         
         if ($this->limiter->tooManyAttempts($key, 2)) {
-            return response()->json([
+            return response()->json(
+                [
                 'success' => false,
                 'message' => 'Too many attempts. Please try again later.'
-            ], 429);
+                ], 429
+            );
         }
         
         $this->limiter->hit($key, 60);

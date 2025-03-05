@@ -11,11 +11,13 @@ class UrlShortenerService
     {
         $slug = $customSlug ?: $this->generateUniqueSlug();
         
-        return ShortUrl::create([
+        return ShortUrl::create(
+            [
             'original_url' => $originalUrl,
             'slug' => $slug,
             'expires_at' => $expiresAt,
-        ]);
+            ]
+        );
     }
 
     public function findBySlug(string $slug): ?ShortUrl
