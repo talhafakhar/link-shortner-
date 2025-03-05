@@ -27,7 +27,7 @@ Laravel URL Shortener is a powerful web application that allows users to convert
 ## ⚙️ Prerequisites
 Ensure you have the following installed before starting:
 
-- ✅ **PHP 8.1+**
+- ✅ **PHP 8.2+**
 - ✅ **Composer**
 - ✅ **Laravel 10.x**
 - ✅ **MySQL or PostgreSQL** (for database storage)
