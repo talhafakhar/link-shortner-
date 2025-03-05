@@ -2,10 +2,9 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
 use App\Models\ShortUrl;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class UrlControllerTest extends TestCase
 {
@@ -28,7 +27,7 @@ class UrlControllerTest extends TestCase
             \Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class,
             'limit',
             ]
-        );    
+        );
     }
     public function test_home_page_loads(): void
     {
@@ -41,7 +40,8 @@ class UrlControllerTest extends TestCase
     public function test_it_creates_short_url(): void
     {
         $response = $this->postJson(
-            'api/shorten', [
+            'api/shorten',
+            [
             'original_url' => 'https://example.com',
             ]
         );
@@ -60,7 +60,8 @@ class UrlControllerTest extends TestCase
         );
 
         $this->assertDatabaseHas(
-            'short_urls', [
+            'short_urls',
+            [
             'original_url' => 'https://example.com',
             ]
         );
@@ -69,7 +70,8 @@ class UrlControllerTest extends TestCase
     public function test_it_creates_short_url_with_custom_slug(): void
     {
         $response = $this->postJson(
-            '/api/shorten', [
+            '/api/shorten',
+            [
             'original_url' => 'https://example.com',
             'custom_slug' => 'test-slug',
             ]
@@ -87,7 +89,8 @@ class UrlControllerTest extends TestCase
         );
 
         $this->assertDatabaseHas(
-            'short_urls', [
+            'short_urls',
+            [
             'original_url' => 'https://example.com',
             'slug' => 'test-slug',
             ]
@@ -103,7 +106,8 @@ class UrlControllerTest extends TestCase
         );
 
         $response = $this->postJson(
-            'api/shorten', [
+            'api/shorten',
+            [
             'original_url' => 'https://example.com',
             'custom_slug' => 'existing-slug',
             ]

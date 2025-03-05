@@ -3,16 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateShortUrlRequest;
-use App\Models\ShortUrl;
 use App\Services\AnalyticsService;
 use App\Services\UrlShortenerService;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\View\View;
 use Illuminate\Support\Facades\Cache;
-use Carbon\Carbon;
-
+use Illuminate\View\View;
 
 class UrlController extends Controller
 {
@@ -33,7 +31,6 @@ class UrlController extends Controller
     public function isExpired()
     {
         return $this->expires_at && Carbon::parse($this->expires_at)->isPast();
-        
     }
     public function create(CreateShortUrlRequest $request): JsonResponse
     {
@@ -52,7 +49,8 @@ class UrlController extends Controller
                 'slug' => $shortUrl->slug,
                 'expires_at' => $shortUrl->expires_at ?? null,
             ]
-            ], 200
+            ],
+            200
         );
     }
 
@@ -61,7 +59,9 @@ class UrlController extends Controller
     public function redirect(string $slug, Request $request): RedirectResponse
     {
         $shortUrl = Cache::remember(
-            'short_url:' . $slug, 3600, function () use ($slug) {
+            'short_url:' . $slug,
+            3600,
+            function () use ($slug) {
                 return $this->urlShortenerService->findBySlug($slug);
             }
         );
@@ -69,7 +69,6 @@ class UrlController extends Controller
         if (!$shortUrl) {
             // return redirect()->route('home')->with('error', 'URL not found');
             abort(404, 'URL not found');
-
         }
         if ($shortUrl->expires_at && now() >= ($shortUrl->expires_at)) {
             Cache::forget('short_url:' . $slug);
@@ -92,12 +91,11 @@ class UrlController extends Controller
         $analytics = $this->analyticsService->getUrlAnalytics($shortUrl);
 
         return view(
-            'analytics', [
+            'analytics',
+            [
             'shortUrl' => $shortUrl,
             'analytics' => $analytics,
             ]
         );
     }
-
-   
 }

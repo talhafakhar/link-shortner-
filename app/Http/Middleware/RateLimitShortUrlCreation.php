@@ -3,9 +3,10 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Illuminate\Cache\RateLimiter;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Illuminate\Cache\RateLimiter;
+
 // use Illuminate\Http\Exceptions\ThrottleRequestsException;
 
 class RateLimitShortUrlCreation
@@ -24,14 +25,15 @@ class RateLimitShortUrlCreation
      */
     public function handle(Request $request, Closure $next): Response
     {
-         $key = 'url-shortener:' . $request->ip();
+        $key = 'url-shortener:' . $request->ip();
         
         if ($this->limiter->tooManyAttempts($key, 2)) {
             return response()->json(
                 [
                 'success' => false,
                 'message' => 'Too many attempts. Please try again later.'
-                ], 429
+                ],
+                429
             );
         }
         
